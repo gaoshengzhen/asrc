@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>update book</title>
+</head>
+<script src="jquery.min.js"></script>
+<script >
+
+    $(function () {
+        var url = location.href;
+        var i=url.indexOf('?');
+        if(i==-1)return;
+        var querystr=url.substr(i+1);
+        var book=querystr.indexOf('=');
+        var bookId=querystr.substr(book+1);
+
+        $.ajax({
+            url: "/update",
+            type: "Post",
+            dataType: "json",
+            data: "bookId="+bookId,
+            success: function(data){
+                if(data!=null){
+                    $("#bookName").val(data.bookName);
+                    $("#bookPrice").val(data.bookPrice);
+                    $("#author").val(data.author);
+                    $("#bookId ").val(bookId);
+                }
+            },
+            error: function(msg){
+                alert("ajax连接异常："+msg);
+            }
+        })
+    })
+
+</script>
+<body>
+<form action="/updateSome" method="post">
+    <table>
+
+        <tr><td>书籍名称</td><td><input type="text" id="bookName" name="bookName"><input type="hidden" name="bookId" id="bookId"></td></tr>
+        <tr><td>书籍价格</td><td><input type="text" id="bookPrice" name="bookPrice"></td></tr>
+        <tr><td>作者</td><td><input type="text" id="author" name="author"></td></tr>
+    </table>
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>

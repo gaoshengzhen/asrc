@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookList</title>
+</head>
+<script src="jquery.min.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            url: "/Book",
+            type: "Post",
+            dataType: "json",
+            success: function(data){
+                        showData(data);
+                    },
+            error: function(msg){
+                        alert("ajax连接异常："+msg);
+                    }
+        })
+            function showData(data) {
+                var str = "";
+                for (var i = 0; i < data.length; i++) {
+                    str = "<tr><td>" + data[i].bookName + "</td>" +
+                        "<td>" + data[i].bookPrice + "</td>"+
+                        "<td>" + data[i].author + "</td>"+
+                        "<td><input type='button' class='del' value='删除' name='"+data[i].bookId+"' id='del'><a href='newBook?bookId="+data[i].bookId+"'>修改</a></td>"+
+                        "</tr>";
+                    $("#book").append(str);         }
+            }
+        $('body').on('click','.del',function(){
+           $.ajax({
+               url: "del",
+               type: "Post",
+               dataType: "json",
+               data: "id="+this.name,
+               success: function (data) {
+                   if(data.success)
+                       alert("删除成功！")
+                   if(!data.success)
+                       alert("删除失败!")
+               },
+               error: function (msg) {
+                   alert("删除出现异常")
+               }
+           })
+        })
+    })
+
+</script>
+<body>
+    <table id = "book">
+        <tr>
+            <td>书籍名称</td>
+            <td>书籍价格</td>
+            <td>作者</td>
+            <td>具体操作</td>
+        </tr>
+    </table>
+<a href="addSome">添加</a>
+</body>
+</html>
